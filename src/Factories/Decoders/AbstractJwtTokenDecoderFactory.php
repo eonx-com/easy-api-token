@@ -9,9 +9,9 @@ use EonX\EasyApiToken\Exceptions\InvalidConfigurationException;
 use EonX\EasyApiToken\External\Auth0JwtDriver;
 use EonX\EasyApiToken\External\FirebaseJwtDriver;
 use EonX\EasyApiToken\External\Interfaces\JwtDriverInterface;
-use EonX\EasyApiToken\Interfaces\EasyApiTokenDecoderInterface;
+use EonX\EasyApiToken\Interfaces\ApiTokenDecoderInterface;
+use EonX\EasyApiToken\Interfaces\Factories\ApiTokenDecoderSubFactoryInterface as DecoderSubFactory;
 use EonX\EasyApiToken\Interfaces\Factories\DecoderNameAwareInterface;
-use EonX\EasyApiToken\Interfaces\Factories\EasyApiTokenDecoderSubFactoryInterface as DecoderSubFactory;
 use EonX\EasyApiToken\Traits\DecoderNameAwareTrait;
 
 abstract class AbstractJwtTokenDecoderFactory implements DecoderSubFactory, DecoderNameAwareInterface
@@ -28,7 +28,7 @@ abstract class AbstractJwtTokenDecoderFactory implements DecoderSubFactory, Deco
      *
      * @throws \EonX\EasyApiToken\Exceptions\InvalidConfigurationException
      */
-    public function build(?array $config = null): EasyApiTokenDecoderInterface
+    public function build(?array $config = null, ?string $name = null): ApiTokenDecoderInterface
     {
         $config = $config ?? [];
 
@@ -46,13 +46,17 @@ abstract class AbstractJwtTokenDecoderFactory implements DecoderSubFactory, Deco
             ));
         }
 
-        return $this->doBuild($this->createJwtDriver($config['driver'], $config['options']), $config);
+        return $this->doBuild($this->createJwtDriver($config['driver'], $config['options']), $config, $name);
     }
 
     /**
      * @param mixed[] $config
      */
-    abstract protected function doBuild(JwtDriverInterface $jwtDriver, array $config): EasyApiTokenDecoderInterface;
+    abstract protected function doBuild(
+        JwtDriverInterface $jwtDriver,
+        array $config,
+        ?string $name = null
+    ): ApiTokenDecoderInterface;
 
     /**
      * @param mixed[] $options List of options to use to create Driver.

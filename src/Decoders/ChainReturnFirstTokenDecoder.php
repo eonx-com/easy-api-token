@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace EonX\EasyApiToken\Decoders;
 
-use EonX\EasyApiToken\Interfaces\EasyApiTokenDecoderInterface;
-use EonX\EasyApiToken\Interfaces\EasyApiTokenInterface;
+use EonX\EasyApiToken\Interfaces\ApiTokenInterface;
 use EonX\EasyApiToken\Traits\ChainEasyApiTokenDecoderTrait;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ChainReturnFirstTokenDecoder implements EasyApiTokenDecoderInterface
+final class ChainReturnFirstTokenDecoder extends AbstractApiTokenDecoder
 {
     use ChainEasyApiTokenDecoderTrait;
 
     /**
-     * @var \EonX\EasyApiToken\Interfaces\EasyApiTokenDecoderInterface[]
+     * @var \EonX\EasyApiToken\Interfaces\ApiTokenDecoderInterface[]
      */
     private $decoders;
 
@@ -23,14 +22,16 @@ final class ChainReturnFirstTokenDecoder implements EasyApiTokenDecoderInterface
      *
      * @throws \EonX\EasyApiToken\Exceptions\InvalidArgumentException
      */
-    public function __construct(array $decoders)
+    public function __construct(array $decoders, ?string $name = null)
     {
         $this->validateDecoders($decoders);
 
         $this->decoders = $decoders;
+
+        parent::__construct($name ?? self::NAME_CHAIN);
     }
 
-    public function decode(ServerRequestInterface $request): ?EasyApiTokenInterface
+    public function decode(ServerRequestInterface $request): ?ApiTokenInterface
     {
         foreach ($this->decoders as $decoder) {
             $token = $decoder->decode($request);
