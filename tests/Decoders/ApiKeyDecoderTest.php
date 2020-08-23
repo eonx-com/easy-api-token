@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace EonX\EasyApiToken\Tests\Decoders;
 
-use EonX\EasyApiToken\Decoders\ApiKeyAsBasicAuthUsernameDecoder;
+use EonX\EasyApiToken\Decoders\ApiKeyDecoder;
 use EonX\EasyApiToken\Interfaces\Tokens\ApiKeyInterface;
 use EonX\EasyApiToken\Tests\AbstractTestCase;
 
-final class ApiKeyAsBasicAuthUsernameDecoderTest extends AbstractTestCase
+final class ApiKeyDecoderTest extends AbstractTestCase
 {
-    public function testApiKeyAsBasicAuthUsernameNullIfAuthorizationHeaderNotSet(): void
+    public function testApiKeyNullIfAuthorizationHeaderNotSet(): void
     {
-        self::assertNull((new ApiKeyAsBasicAuthUsernameDecoder())->decode($this->createServerRequest()));
+        self::assertNull((new ApiKeyDecoder())->decode($this->createRequest()));
     }
 
-    public function testApiKeyAsBasicAuthUsernameNullIfDoesntStartWithBasic(): void
+    public function testApiKeyNullIfDoesntStartWithBasic(): void
     {
-        self::assertNull((new ApiKeyAsBasicAuthUsernameDecoder())->decode($this->createServerRequest([
+        self::assertNull((new ApiKeyDecoder())->decode($this->createRequest([
             'HTTP_AUTHORIZATION' => 'SomethingElse',
         ])));
     }
 
-    public function testApiKeyAsBasicAuthUsernameNullIfNotOnlyApiKeyProvided(): void
+    public function testApiKeyNullIfNotOnlyApiKeyProvided(): void
     {
         $tests = [
             '',
@@ -32,13 +32,13 @@ final class ApiKeyAsBasicAuthUsernameDecoderTest extends AbstractTestCase
         ];
 
         foreach ($tests as $test) {
-            self::assertNull((new ApiKeyAsBasicAuthUsernameDecoder())->decode($this->createServerRequest([
+            self::assertNull((new ApiKeyDecoder())->decode($this->createRequest([
                 'HTTP_AUTHORIZATION' => 'Basic ' . \base64_encode($test),
             ])));
         }
     }
 
-    public function testApiKeyAsBasicAuthUsernameReturnEasyApiTokenSuccessfully(): void
+    public function testApiKeyReturnEasyApiTokenSuccessfully(): void
     {
         // Value in header => [expectedUsername, expectedPassword]
         $tests = [
@@ -50,7 +50,7 @@ final class ApiKeyAsBasicAuthUsernameDecoderTest extends AbstractTestCase
 
         foreach ($tests as $test => $expected) {
             /** @var \EonX\EasyApiToken\Interfaces\Tokens\ApiKeyInterface $token */
-            $token = (new ApiKeyAsBasicAuthUsernameDecoder())->decode($this->createServerRequest([
+            $token = (new ApiKeyDecoder())->decode($this->createRequest([
                 'HTTP_AUTHORIZATION' => \sprintf('Basic %s', \base64_encode($test)),
             ]));
 
