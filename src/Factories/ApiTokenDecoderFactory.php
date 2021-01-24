@@ -83,3 +83,5 @@ final class ApiTokenDecoderFactory implements ApiTokenDecoderFactoryInterface
         $this->decoders = $decoders;
     }
 }
+
+\class_alias(ApiTokenDecoderFactory::class, EasyApiTokenDecoderFactory::class);

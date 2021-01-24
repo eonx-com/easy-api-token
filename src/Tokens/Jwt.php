@@ -81,3 +81,5 @@ final class Jwt implements JwtInterface
         return isset($this->payload[$claim]);
     }
 }
+
+\class_alias(Jwt::class, JwtEasyApiToken::class);
