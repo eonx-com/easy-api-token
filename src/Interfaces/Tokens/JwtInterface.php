@@ -24,3 +24,5 @@ interface JwtInterface extends ApiTokenInterface
 
     public function hasClaim(string $claim): bool;
 }
+
+\class_alias(JwtInterface::class, JwtEasyApiTokenInterface::class);

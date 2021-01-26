@@ -13,3 +13,5 @@ interface ApiTokenInterface
      */
     public function getPayload(): array;
 }
+
+\class_alias(ApiTokenInterface::class, EasyApiTokenInterface::class);
