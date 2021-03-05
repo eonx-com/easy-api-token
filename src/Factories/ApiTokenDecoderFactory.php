@@ -60,7 +60,7 @@ final class ApiTokenDecoderFactory implements ApiTokenDecoderFactoryInterface
      */
     private function filter(iterable $collection, string $class): array
     {
-        return CollectorHelper::orderLowerPriorityFirstAsArray(CollectorHelper::filterByClass($collection, $class));
+        return CollectorHelper::orderLowerPriorityFirst(CollectorHelper::filterByClass($collection, $class));
     }
 
     /**
@@ -83,3 +83,5 @@ final class ApiTokenDecoderFactory implements ApiTokenDecoderFactoryInterface
         $this->decoders = $decoders;
     }
 }
+
+\class_alias(ApiTokenDecoderFactory::class, EasyApiTokenDecoderFactory::class);
