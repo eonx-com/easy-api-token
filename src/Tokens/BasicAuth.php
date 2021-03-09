@@ -56,3 +56,5 @@ final class BasicAuth implements BasicAuthInterface
         return $this->username;
     }
 }
+
+\class_alias(BasicAuth::class, BasicAuthEasyApiToken::class);

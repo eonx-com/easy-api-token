@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace EonX\EasyApiToken\Tests\Bridge\Symfony\Stubs;
 
-use EonX\EasyApiToken\Bridge\BridgeConstantsInterface;
 use EonX\EasyApiToken\Bridge\Symfony\EasyApiTokenBundle;
-use EonX\EasyApiToken\Tests\Stubs\DecoderProviderStub;
+use EonX\EasyApiToken\Interfaces\ApiTokenDecoderInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,20 +21,12 @@ final class KernelStub extends Kernel implements CompilerPassInterface
 
     public function process(ContainerBuilder $container): void
     {
-        foreach ($container->getDefinitions() as $definition) {
-            $definition->setPublic(true);
-        }
-
-        foreach ($container->getAliases() as $alias) {
-            $alias->setPublic(true);
-        }
+        $container->getDefinition(ApiTokenDecoderInterface::class)->setPublic(true);
 
         $container
-            ->setDefinition(DecoderProviderStub::class, new Definition(DecoderProviderStub::class))
+            ->setDefinition(ServiceStub::class, new Definition(ServiceStub::class))
             ->setAutowired(true)
-            ->setAutoconfigured(true)
-            ->setPublic(true)
-            ->addTag(BridgeConstantsInterface::TAG_DECODER_PROVIDER);
+            ->setPublic(true);
     }
 
     /**
@@ -48,6 +39,7 @@ final class KernelStub extends Kernel implements CompilerPassInterface
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        // No body needed.
+        $loader->load(__DIR__ . '/config.yaml');
+        $loader->load(__DIR__ . '/config_test.yaml');
     }
 }
