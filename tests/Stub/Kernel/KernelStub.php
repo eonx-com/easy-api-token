@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace EonX\EasyApiToken\Tests\Stub\HttpKernel;
+namespace EonX\EasyApiToken\Tests\Stub\Kernel;
 
 use EonX\EasyApiToken\Bundle\EasyApiTokenBundle;
 use EonX\EasyApiToken\Bundle\Enum\ConfigTag;
